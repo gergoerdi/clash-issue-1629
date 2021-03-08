@@ -1,5 +1,5 @@
 name: clash-HEAD
-resolver: lts-16.21
+resolver: lts-17.2
 
 packages:
   - github: clash-lang/clash-compiler
