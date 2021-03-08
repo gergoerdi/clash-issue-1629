@@ -4,23 +4,23 @@
 import Clash.Prelude hiding (Bundle(..), mealyB)
 
 class Bundle a f res | f a -> res, f res -> a where
-    bundle :: res -> f a
+    bundle :: (Applicative f) => res -> f a
 
-    default bundle :: (res ~ f a) => res -> f a
+    default bundle :: (Applicative f, res ~ f a) => res -> f a
     bundle = id
 
-    unbundle :: f a -> res
+    unbundle :: (Traversable f) => f a -> res
 
-    default unbundle :: (res ~ f a) => f a -> res
+    default unbundle :: (Traversable f, res ~ f a) => f a -> res
     unbundle = id
 
 instance Bundle Bit f (f Bit) where
 
-instance (Applicative f) => Bundle (a, b) f (f a, f b) where
+instance Bundle (a, b) f (f a, f b) where
     bundle (x, y) = (,) <$> x <*> y
     unbundle xy = (fst <$> xy, snd <$> xy)
 
-instance (KnownNat n, Applicative f, Traversable f) => Bundle (Vec n a) f (Vec n (f a)) where
+instance (KnownNat n) => Bundle (Vec n a) f (Vec n (f a)) where
     bundle = traverse# id
     unbundle = sequenceA . fmap lazyV
 
