@@ -1,6 +1,8 @@
 {-# LANGUAGE DefaultSignatures #-}
 {-# LANGUAGE MultiParamTypeClasses, FunctionalDependencies #-}
 {-# LANGUAGE TypeFamilyDependencies #-}
+module Bundle where
+
 import Clash.Prelude hiding (Bundle(..), mealyB)
 
 class Bundle a f res | f a -> res, f res -> a where
@@ -61,6 +63,3 @@ foo = mealyB minMax (0, 0)
   where
     minMax :: (Int, Int) -> (Int, Int) -> ((Int, Int), (Int, Int))
     minMax (x, y) (minX, maxY) = ((x + maxY, y + minX), (min x minX, max y maxY))
-
-main :: IO ()
-main = pure ()
